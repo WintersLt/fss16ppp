@@ -1,5 +1,15 @@
 # Answers for HW2
 
+## Active Shooter Exercise
+####List two things not to do during an active shooter event.
+- Do not panic
+- Do not stop calling Emergency services even if the lines are jammed.
+
+####List two things best to do during an active shooter event.
+- Leave belongings behind and find a safer place to hide.
+- Avoid places that trap or restrict movement.
+
+
 ## 3.1
 Error: name 'repeat_lyrics' is not defined
 
