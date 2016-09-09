@@ -3,26 +3,22 @@
 ## J. Chang and D. Blei. Relational topic models for document networks. In AIStats, 2009.
 
 ### Keywords
-#### ii1) RTM: 
-	  Relational Topic Model(RTM) is the novel approach for modelling 
-	  document networks presented in this paper. Document is modelled using 
-	  LDA(Latent Dirichlet allocation) topic modelling technique. The link 
-	  between documents is then modelled as a binary variable, one for each
-	  pair of documents.
+#### ii1) RTM:
+Relational Topic Model(RTM) is the novel approach for modelling document networks presented in this paper. Document is modelled using LDA(Latent Dirichlet allocation) topic modelling technique. The link between documents is then modelled as a binary variable, one for each pair of documents.
 
 #### ii2) LDA: 
-	  LDA is a generative probabilistic model popular for topic modelling
-	  to describe a corpus of documents. In its generative process, each 
-	  document is allocated a Dirichlet distributed vector of topic proportions, 
-	  and each word of the document is assumed drawn by first drawing a topic
-	  assignment from the overall topic distribution for document and then drawing 
-	  the word from the corresponding topic distribution pertaining to that topic.
+LDA is a generative probabilistic model popular for topic modelling
+to describe a corpus of documents. In its generative process, each 
+document is allocated a Dirichlet distributed vector of topic proportions, 
+and each word of the document is assumed drawn by first drawing a topic
+assignment from the overall topic distribution for document and then drawing 
+the word from the corresponding topic distribution pertaining to that topic.
 
 #### ii3) Document networks: 
-	  A collection of textual documents that are related to 
-	  each other in some way, so that they form links between each other that can 
-	  be modelled as a network. e.g. Scientific papers and their citations, web pages
-	  and hyperlinks.
+A collection of textual documents that are related to 
+each other in some way, so that they form links between each other that can 
+be modelled as a network. e.g. Scientific papers and their citations, web pages
+and hyperlinks.
 
 #### ii4) Variational inference: 
 It is a technique used in Bayesian inference to estimate intractable quantities, usually probabilities and expectations.
