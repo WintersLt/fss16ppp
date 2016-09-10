@@ -180,8 +180,7 @@ def find_probabilities():
     sorted_counts = sorted(counts.items(), key=lambda x: x[1])
     for label, count in sorted_counts:
         if count:
-            print label, "occurs one in", 70000.00/count
-            print label, count
+            print label, "chances for this are one in", 70000.00/count
 
 
 if __name__ == '__main__':
