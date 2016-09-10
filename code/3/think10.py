@@ -12,8 +12,9 @@ def has_duplicates(t):
 
 
 nl = [1,6,2,3,9,6]
-print has_duplicates(nl)	
-#print nl
+print "given list ", nl
+print "has duplicates", has_duplicates(nl)	
+
 
 import random
 
@@ -27,6 +28,7 @@ def generateRandomBdayList():
 
 
 simulationCount = 10000
+print "simulation count = ", simulationCount
 count =0
 for i in range(simulationCount):
 	bdayList = generateRandomBdayList()
@@ -35,5 +37,5 @@ for i in range(simulationCount):
 		count = count+1
 
 prob = count/float(simulationCount)
-print "prob = ", prob
+print "probability = ", prob
 	
