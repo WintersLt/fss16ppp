@@ -41,6 +41,7 @@ niques – tokenization, stemming and stop word removal.
 As a future work, the author plan to investigate the utility of paraphrases in discriminative models for potential improvement in accuracy. 
 The other interesting direction is adopting pattern-based classification to extract richer feature
 set that enables better discrimination and detection of duplicate bug reports
+
 ### iii4) Baseline results:
 We have validated our approach on three large software bug
 repositories from Firefox, Eclipse, and OpenOffice. We show
@@ -50,6 +51,7 @@ OpenOffice, Firefox, and Eclipse datasets respectively using
 commonly available natural language information only.
 
 ### Improvements
+
 #### iv1)
 The authors have not focused much on the automatic filtering of duplicates to prevent multiple duplicate reports from 
 reaching triagers instead the author choose to provide a list of similar bug reports to each incoming report under investigation. 
@@ -59,6 +61,5 @@ The authors did get good results on the three open source bug repositories that 
 test their approach on even larger repositories. If the results are consistent for larger repositories then we
 
 #### iv3) 
-
-
+The runtime overhead of our algorithm is higher than past approaches, for larger repositories it can be a bit of problem.
 
