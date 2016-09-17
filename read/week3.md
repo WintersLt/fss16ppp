@@ -49,8 +49,12 @@ commonly available natural language information only.
 
 ### Improvements
 #### iv1)
+The authors have not focused much on the automatic filtering of duplicates to prevent multiple duplicate reports from 
+reaching triagers instead the author choose to provide a list of similar bug reports to each incoming report under investigation. 
 
 #### iv2)
+The authors did get good results on the three open source bug repositories that they tested, however to solidfy their findings they should
+test their approach on even larger repositories. If the results are consistent for larger repositories then we
 
 #### iv3) 
 
