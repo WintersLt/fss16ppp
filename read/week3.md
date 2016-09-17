@@ -37,8 +37,10 @@ One of the pioneer studies on duplicate bug report detection is by Runeson et al
 the textual bug reports via natural language processing tech-
 niques – tokenization, stemming and stop word removal.
 
-### iii3) Patterns/Anti patterns:
-
+### iii3) Future Work:
+As a future work, the author plan to investigate the utility of paraphrases in discriminative models for potential improvement in accuracy. 
+The other interesting direction is adopting pattern-based classification to extract richer feature
+set that enables better discrimination and detection of duplicate bug reports
 ### iii4) Baseline results:
 We have validated our approach on three large software bug
 repositories from Firefox, Eclipse, and OpenOffice. We show
