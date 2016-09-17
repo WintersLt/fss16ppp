@@ -15,6 +15,6 @@ ram = Employee("ram ", 50)
 mohan = Employee(" mohan ",30)
 
 employees = [ram, mohan]
-print employees
+print "Before Sorting", employees
 employees.sort()
-print employees
+print "After Sorting", employees
