@@ -72,7 +72,8 @@ def normalize_e(e):
 
 def neighor(s):
     ''' finds a neighbour point within 10 units '''
-    return (s + random.uniform(-10, 10))
+    return random.uniform(s*0.99, s*1.01)
+    # return (s + random.uniform(-10, 10))
 
 def P(e, en, k):
     ''' calculates probability for random jump in simulated annealing '''
@@ -111,7 +112,7 @@ def simulate():
         
         k+=1
         if k%25 == 0:
-            print "\n", "%04d" % k, round(e, 1), " ",
+            print "\n", "%04d" % k, round(e, 6), " ",
     #print "\n", k, KMAX, e, emin
     return sb
 
