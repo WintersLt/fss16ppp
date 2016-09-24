@@ -47,7 +47,7 @@ recall rate@k by 10–27%, and MAP by 17–23%.
 ### Improvements
 
 #### iv1)
-The authors could have also compared their results with using other similarity techniques than Cosine Similarity. 
+The authors could have also compared their results using other similarity techniques than Cosine Similarity. 
 
 #### iv2)
 The authors could also have taken execution trace information present in the bug reports into consideration.
