@@ -1,6 +1,6 @@
 # Reading-Week 3
 
-##A Discriminative Model Approach for Accurate Duplicate Bug Report Retrieval##
+##C. Sun, D. Lo, X. Wang, J. Jiang, and S.-C. Khoo. A Discriminative Model Approach for Accurate Duplicate Bug Report Retrieval##
 
 ### Keywords
 
@@ -58,7 +58,7 @@ reaching triagers instead the author choose to provide a list of similar bug rep
 
 #### iv2)
 The authors did get good results on the three open source bug repositories that they tested, however to solidfy their findings they should
-test their approach on even larger repositories. If the results are consistent for larger repositories then we
+test their approach on even larger repositories. If the results are consistent for larger repositories then it will really back their claims.
 
 #### iv3) 
 The runtime overhead of our algorithm is higher than past approaches, for larger repositories it can be a bit of problem.
