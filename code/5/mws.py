@@ -91,7 +91,7 @@ class Problem(object):
         best_sol_pos = sol[pos]
         for i in range(10):
             sol[pos] += step
-            if not not Problem.is_valid(sol):
+            if not Problem.is_valid(sol):
                 continue
             new_obj = max(obj, norm_objective(sol))
             if new_obj > obj:
@@ -151,7 +151,7 @@ def mws():
     for i in range(MAX_RETRIES):
         solution = problem.generate_one()
         prev_score = 0.0
-        print "iteration", i, ':',
+        print "Retry", i, ':',
         for j in range(MAX_CHANGES):
             score = norm_objective(solution)
            #if 1 - score <= THRESHOLD:
