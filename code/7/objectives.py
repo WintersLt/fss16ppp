@@ -15,6 +15,9 @@ import utils
 # generate_one() to generate a random solution
 # fix neighbor function in sa
 
+DO_MINIMIZE = 0
+DO_MAXIMIZE = 1
+
 class Decision(object):
     def __init__(self, name, low, high):
         self.name = name
@@ -30,6 +33,9 @@ class Problem(object):
     """
     def __init__(self):
         __metaclass__ = ABCMeta
+        self.obj_mins = []
+        self.obj_maxs = []
+        self.objective_type = []
 
     @abstractmethod
     def is_valid(self, solution):
@@ -46,6 +52,11 @@ class Problem(object):
         print "Error generate_one(): couldnt generate solution"
         return None
     
+    def normalise_obj(self, objs):
+        # TODO set min max of objs
+        # and then normalize and send result
+        return objs
+
     @abstractmethod
     def evaluate(self, solution):
         pass
@@ -100,9 +111,13 @@ class DTSZ7(Problem):
         self.decisions = [Decision('x' + str(i+1), 0, 1) for i in range(num_decisions)]
         self.num_obj = num_obj
         self.num_decisions = num_decisions
+        self.objective_type = [DO_MINIMIZE for _ in range(num_obj)]
     def is_valid(self, solution):
         return True
-    def evaluate(self, solution):
+
+    # Inspired from Jmetal
+    # https://github.com/jMetal/jMetal/blob/master/jmetal-problem/src/main/java/org/uma/jmetal/problem/multiobjective/dtlz/DTLZ7.java
+    def get_objectives(self, solution):
         f = solution[0 : (self.num_obj-1)]
         k = self.num_decisions - self.num_obj + 1
         g = sum(solution[(self.num_decisions - k):])
@@ -110,4 +125,27 @@ class DTSZ7(Problem):
         h = sum([(fi / (1.0 + g))*(1+math.sin(3.0 * math.pi * fi)) for fi in f])
         h = self.num_obj - h
         f += [(1+g)*h]
-        return sum(f)
+        return f
+
+    def evaluate2(self, solution):
+        def calcG(decVecParam):
+          res= float(0)
+          res = 1 + float(9)/float(len(decVecParam)) * sum(decVecParam)
+          return float(res)
+
+        def calcH(f1Obj, gValueParam):
+           res= float(0)
+           res  = float(self.num_obj) - float(f1Obj/( 1 + gValueParam)) * float(1 + math.sin(3* math.pi*f1Obj))
+           return res
+
+        def getobj(decisionVec):
+           gVal = calcG(decisionVec)
+           f1=decisionVec[0]
+           f2= (1 + gVal) * calcH(f1, gVal)
+           return [f1,f2]
+        
+        return sum(getobj(solution))
+
+    def evaluate(self, solution):
+        return sum(self.get_objectives(solution))
+

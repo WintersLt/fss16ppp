@@ -6,6 +6,7 @@ import sys
 import utils
 import objectives
 import copy
+import stats
 
 # de/rand/1
 MIN=None
@@ -20,21 +21,30 @@ class Thing():
     self.id = Thing.id = Thing.id + 1
     self.__dict__.update(entries)
 
-def my_de(max  = 5000,  # number of repeats 
-       np      = 100,  # number of candidates
+def my_de(max  = 10000,  # number of repeats 
+       np      = 30,  # number of candidates
        f       = 0.75, # extrapolate amount
        cf      = 0.3,  # prob of cross-over 
        epsilon = 0.0001,
        problem = None
      ):
   frontier = [problem.generate_one() for _ in range(np)] 
+  base_pop = frontier[:]
+  last_frontier = frontier[:]
+  lives = 5
   for k in range(max):
     total,n = update(f,cf,frontier,problem)
-    if(k%2 == 0):
-      print (sum([score(problem, x ) for x in frontier])/len(frontier)), total/n, MIN, MAX
-    if total/n < epsilon: 
-      break
-  return frontier
+    if k%100 == 0:
+      #print (sum([score(problem, x ) for x in frontier])/len(frontier)), total/n, MIN, MAX
+      if stats.a12([problem.evaluate(X) for X in last_frontier], [problem.evaluate(X) for X in frontier]): # if small effect
+          lives -= 1
+      else:
+          lives = 5
+      if not lives: break
+      last_frontier = frontier[:]
+    #if total/n < epsilon: 
+    #  break
+  return [problem.get_objectives(X) for X in base_pop], [problem.get_objectives(X) for X in frontier]
 
 def update(f,cf,frontier,problem, total=0.0, n=0):
   for i in range(len(frontier)):
@@ -99,9 +109,8 @@ def a(lst) :
 def de(problem):
     global MIN, MAX
     MIN, MAX = utils.find_min_max(problem)
-    sols = my_de(problem = problem)
-    print(sum([score(problem, x ) for x in sols])/len(sols))
-    for sol in sols:
-        print sol
+    return my_de(problem = problem)
+    #for sol in sols: print sol, problem.evaluate(sol)
+    #return sols  # returning a pareto frontier of 30 points
 
-de(objectives.DTSZ7(10,2))
+#de(objectives.DTSZ7(10,2))
