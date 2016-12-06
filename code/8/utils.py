@@ -22,7 +22,7 @@ def generate_one(problem):
 def update_individual_min_max(problem, solution):
 	fs = problem.get_objectives(solution)
 	problem.obj_mins = [min(problem.obj_mins[i], fs[i]) for i in range(len(fs))]
-	problem.obj_maxs = [max(problem.obj_mins[i], fs[i]) for i in range(len(fs))]
+	problem.obj_maxs = [max(problem.obj_maxs[i], fs[i]) for i in range(len(fs))]
 
 
 def find_min_max(problem):

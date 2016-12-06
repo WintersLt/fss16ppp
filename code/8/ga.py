@@ -44,7 +44,7 @@ def mutate(problem, point, mutation_rate=0.01):
             point[i] = random_value(decision.low, decision.high)
     return point
 
-def fast_non_dom_sort(problem, population):
+def fast_non_dom_sort(problem, population, better=utils.bdom):
     class FrontierPt(object):
         id = 0
         def __init__(self, s = [], n = 0, rank = 0, decisions = []):
@@ -61,14 +61,16 @@ def fast_non_dom_sort(problem, population):
         for q in mypop:
             if q.id == p.id: continue
             q_obj = problem.get_objectives(q.decisions)
-            if utils.bdom(problem, p_obj, q_obj):
+            if better(problem, p_obj, q_obj):
                 p.s.append(q)
-            elif utils.bdom(problem, q_obj, p_obj):
+            elif better(problem, q_obj, p_obj):
                 p.n += 1
         if not p.n:
             p.rank = 1
             frontiers[0].append(p)
     i = 0
+    num_added = len(frontiers[0])
+    num_needed = len(population)
     while len(frontiers[i]):
         Q = []
         for p in frontiers[i]:
@@ -77,8 +79,14 @@ def fast_non_dom_sort(problem, population):
                 if not q.n:
                     q.rank = i + 2
                     Q.append(q)
+        # if some frontier didn't directly give us next frontier, retry
+        if not len(Q) and num_added < num_needed:
+            continue
         i += 1
         frontiers.append(Q)
+        num_added += len(Q)
+
+    assert(sum([len(front) for front in frontiers]) == len(population))
     return [[frontier_pt.decisions for frontier_pt in frontier] for frontier in frontiers]
 
 def cuboid_sort_select(problem, to_select, frontier):
@@ -92,7 +100,7 @@ def cuboid_sort_select(problem, to_select, frontier):
         myfrontier = sorted(myfrontier, key = lambda Pt: Pt.objectives[i])
         lo = myfrontier[0].objectives[i]
         hi = myfrontier[-1].objectives[i]
-        size = hi - lo
+        size = hi - lo or 1
         for j in range(len(myfrontier)):
             ip = 0.0
             if j-1 > 0: 
@@ -104,22 +112,49 @@ def cuboid_sort_select(problem, to_select, frontier):
     myfrontier = sorted(myfrontier, key = lambda X: X.ip, reverse = True)[:to_select]
     return [X.decisions for X in myfrontier]
 
-def select(problem, population, retain_size):
-    frontiers = fast_non_dom_sort(problem, population)
+def cdom_sort_select(problem, to_select, frontier):
+    class CDOMSortPt(object):
+        def __init__(self, decisions, objectives):
+            self.decisions = decisions
+            self.objectives = objectives
+            self.num_pts_dominated = 0
+    myfrontier = [CDOMSortPt(X, problem.get_objectives(X)) for X in frontier]
+    # this is slow but number of points inside frontier wont be too many
+    for i, one in enumerate(myfrontier):
+        j = i+1
+        while j < len(myfrontier):
+            other = myfrontier[j]
+            if utils.cdom(problem, one.objectives, other.objectives):
+                one.num_pts_dominated += 1
+            else:
+                other.num_pts_dominated += 1
+            j+=1
+
+    myfrontier = sorted(myfrontier, key = lambda Pt: Pt.num_pts_dominated, 
+            reverse=True)[:to_select]
+    return [X.decisions for X in myfrontier]
+
+def select(problem, population, retain_size, better=utils.bdom):
+    frontiers = fast_non_dom_sort(problem, population, better)
     i = 0
     new_pop = []
-    while len(new_pop) + len(frontiers[i]) <= retain_size:
+    while len(new_pop) + len(frontiers[i]) < retain_size:
         new_pop += frontiers[i]
         i+=1
     if len(new_pop) == retain_size:
         return new_pop
     # do additional pruning in frontier i
     to_select = retain_size - len(new_pop)
-    new_pop += cuboid_sort_select(problem,to_select, frontiers[i])
+    if better == utils.bdom:
+        new_pop += cuboid_sort_select(problem,to_select, frontiers[i])
+    else:
+        #new_pop += cdom_sort_select(problem,to_select, frontiers[i])
+        new_pop += cuboid_sort_select(problem,to_select, frontiers[i])
+    
     assert(len(new_pop) == retain_size)
     return new_pop
 
-def ga(problem, pop_size = 100, gens = 250):
+def ga(problem, pop_size = 100, gens = 250, better=utils.bdom):
     population = [problem.generate_one() for _ in range(pop_size)]
     initial_population = population[:]
     gen = 0 
@@ -136,7 +171,7 @@ def ga(problem, pop_size = 100, gens = 250):
             if problem.is_valid(child) and child not in population+children:
                 children.append(child)
         population += children
-        population = select(problem, population, pop_size)
+        population = select(problem, population, pop_size, better)
         gen += 1
     print("")
     return initial_population, population
@@ -156,8 +191,10 @@ def plot_pareto(initial, final):
     plt.legend(loc=9, bbox_to_anchor=(0.5, -0.175), ncol=2)
     plt.show()
 
-problem = objectives.DTSZ7(10,2)
+random.seed(1)
+problem = objectives.DTSZ1(10,2)
 problem.find_min_max()
-initial, final = ga(problem = problem)
+initial, final = ga(problem = problem, better = utils.cdom)
+#initial, final = ga(problem = problem)
 print(final)
 #plot_pareto(initial, final)

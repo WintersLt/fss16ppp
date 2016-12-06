@@ -6,6 +6,7 @@ import sys
 import random
 import math
 import utils
+import copy
 
 # Each optimizer need input in the form of a problem class
 # it contains decisions containing valid ranges for each variable
@@ -43,12 +44,12 @@ class Problem(object):
     def is_valid(self, solution):
         pass
     def update_individual_min_max(self, objs):
-    	if not self.obj_mins:
+    	if not len(self.obj_mins):
     		self.obj_mins = objs
     		self.obj_maxs = objs
     		return
         self.obj_mins = [min(self.obj_mins[i], objs[i]) for i in range(len(objs))]
-        self.obj_maxs = [max(self.obj_mins[i], objs[i]) for i in range(len(objs))]
+        self.obj_maxs = [max(self.obj_maxs[i], objs[i]) for i in range(len(objs))]
     
     def update_min_max(self, objs):
         s = sum(objs)
@@ -80,13 +81,9 @@ class Problem(object):
         return None
     
     def normalise_obj(self, objs):
-        # TODO set min max of objs
-        # and then normalize and send result
-        norm_obj = copy.deepcopy(objs)
-        norm_obj = []
-        return [(norm_obj[i] - self.obj_mins[i]) / 
+        return [(objs[i] - self.obj_mins[i]) / 
                 (self.obj_maxs[i] - self.obj_mins[i]) 
-                for i in range(len(norm_obj))]
+                for i in range(len(objs))]
 
     @abstractmethod
     def evaluate(self, solution):
@@ -134,7 +131,7 @@ class DTSZ1(Problem):
     # https://github.com/jMetal/jMetal/blob/master/jmetal-problem/src/main/java/org/uma/jmetal/problem/multiobjective/dtlz/DTLZ1.java
     def get_objectives(self, solution):
         k = self.num_decisions - self.num_obj + 1
-        g = sum([((x-0.5)**2 - math.cos(20/0 * math.pi * (x-0.5))) for x in solution])
+        g = sum([((x-0.5)**2 - math.cos(20.0 * math.pi * (x-0.5))) for x in solution])
         g = 100 * (k+g)
         f = [(1.0 + g)*0.5] * self.num_obj
         for i in xrange(self.num_obj-1):
@@ -143,6 +140,72 @@ class DTSZ1(Problem):
             if i != 0:
                 aux = self.num_obj - (i+1)
                 f[i] *= 1 - solution[aux]
+        self.update_min_max(f)
+        return f
+
+    def evaluate(self, solution):
+        return sum(self.get_objectives(solution))
+
+
+class DTSZ3(Problem):
+    def __init__(self, num_decisions, num_obj):
+        Problem.__init__(self)
+        self.decisions = [Decision('x' + str(i+1), 0, 1) for i in range(num_decisions)]
+        self.num_obj = num_obj
+        self.num_decisions = num_decisions
+        self.objective_type = [DO_MINIMIZE for _ in range(num_obj)]
+
+    def is_valid(self, solution):
+        return True
+
+    # Inspired from Jmetal
+    # https://github.com/jMetal/jMetal/blob/master/jmetal-problem/src/main/java/org/uma/jmetal/problem/multiobjective/dtlz/DTLZ3.java
+    def get_objectives(self, solution):
+        k = self.num_decisions - self.num_obj + 1
+        g = sum([((x-0.5)**2 - math.cos(20.0 * math.pi * (x-0.5))) for x in solution])
+        g = 100 * (k+g)
+        f = [(1.0 + g)] * self.num_obj
+        for i in xrange(self.num_obj-1):
+            for j in xrange(self.num_obj - i - 1):
+                f[i] *= math.cos(solution[j] * 0.5 * math.pi)
+            if i != 0:
+                aux = self.num_obj - (i+1)
+                f[i] *= math.sin(solution[aux] * 0.5 * math.pi)
+        self.update_min_max(f)
+        return f
+
+    def evaluate(self, solution):
+        return sum(self.get_objectives(solution))
+
+class DTSZ5(Problem):
+    def __init__(self, num_decisions, num_obj):
+        Problem.__init__(self)
+        self.decisions = [Decision('x' + str(i+1), 0, 1) for i in range(num_decisions)]
+        self.num_obj = num_obj
+        self.num_decisions = num_decisions
+        self.objective_type = [DO_MINIMIZE for _ in range(num_obj)]
+
+    def is_valid(self, solution):
+        return True
+
+    # Inspired from Jmetal
+    # https://github.com/jMetal/jMetal/blob/master/jmetal-problem/src/main/java/org/uma/jmetal/problem/multiobjective/dtlz/DTLZ5.java
+    def get_objectives(self, solution):
+        k = self.num_decisions - self.num_obj + 1
+        g = sum([(x-0.5)**2 for x in solution])
+        t = math.pi / (4.0 * (1.0 + g))
+        theta = []
+        theta.append(solution[0] * math.pi / 2.0)
+        for i in xrange(self.num_obj - 1 - 1):
+            theta.append(t * (1.0 + 2.0 * g * solution[i+1]))
+        f = [1.0 + g] * self.num_obj
+        
+        for i in xrange(self.num_obj-1):
+            for j in xrange(self.num_obj - i - 1):
+                f[i] *= math.cos(theta[j])
+            if i != 0:
+                aux = self.num_obj - (i+1)
+                f[i] *= math.sin(theta[aux])
         self.update_min_max(f)
         return f
 
