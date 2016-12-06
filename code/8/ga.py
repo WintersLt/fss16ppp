@@ -7,6 +7,8 @@ import sys
 import objectives
 import utils
 import matplotlib.pyplot as plt
+import hve
+import hve2
 
 # Few Utility functions
 def say(*lst):
@@ -154,12 +156,20 @@ def select(problem, population, retain_size, better=utils.bdom):
     assert(len(new_pop) == retain_size)
     return new_pop
 
-def ga(problem, pop_size = 100, gens = 250, better=utils.bdom):
+def find_hve2(problem, population):
+    solutions = [problem.get_objectives(X) for X in population]
+    referencePoint = [1.5 * y for y in problem.obj_maxs]
+    hv = hve2.InnerHyperVolume(referencePoint)
+    return hv.compute(solutions)
+
+def ga(problem, pop_size = 100, gens = 35, better=utils.bdom):
     population = [problem.generate_one() for _ in range(pop_size)]
     initial_population = population[:]
+    #hypervol = hve.hve(problem, population)
+    init_hypervol = find_hve2(problem, population)
     gen = 0 
     while gen < gens:
-        say(".")
+        #say(".")
         children = []
         for _ in range(pop_size):
             # can improbe choice by touranament selection
@@ -173,8 +183,11 @@ def ga(problem, pop_size = 100, gens = 250, better=utils.bdom):
         population += children
         population = select(problem, population, pop_size, better)
         gen += 1
-    print("")
-    return initial_population, population
+    #print("")
+    #hypervol = hve.hve(problem, population)
+    hypervol = find_hve2(problem, population)
+    #return initial_population, population
+    return hypervol/init_hypervol
 
 def plot_pareto(initial, final):
     initial_objs = [point.objectives for point in initial]
@@ -191,10 +204,10 @@ def plot_pareto(initial, final):
     plt.legend(loc=9, bbox_to_anchor=(0.5, -0.175), ncol=2)
     plt.show()
 
-random.seed(1)
-problem = objectives.DTSZ1(10,2)
-problem.find_min_max()
-initial, final = ga(problem = problem, better = utils.cdom)
-#initial, final = ga(problem = problem)
-print(final)
-#plot_pareto(initial, final)
+#   random.seed(1)
+#   problem = objectives.DTSZ7(10,2)
+#   problem.find_min_max()
+#   initial, final = ga(problem = problem, better = utils.cdom)
+#   #initial, final = ga(problem = problem)
+#   print(final)
+#   #plot_pareto(initial, final)
