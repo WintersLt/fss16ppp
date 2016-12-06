@@ -43,8 +43,12 @@ class Problem(object):
     def is_valid(self, solution):
         pass
     def update_individual_min_max(self, objs):
-        self.obj_mins = [min(self.obj_mins[i], fs[i]) for i in range(len(objs))]
-        self.obj_maxs = [max(self.obj_mins[i], fs[i]) for i in range(len(objs))]
+    	if not self.obj_mins:
+    		self.obj_mins = objs
+    		self.obj_maxs = objs
+    		return
+        self.obj_mins = [min(self.obj_mins[i], objs[i]) for i in range(len(objs))]
+        self.obj_maxs = [max(self.obj_mins[i], objs[i]) for i in range(len(objs))]
     
     def update_min_max(self, objs):
         s = sum(objs)
@@ -90,6 +94,7 @@ class Problem(object):
 
 class DTSZ7(Problem):
     def __init__(self, num_decisions, num_obj):
+        Problem.__init__(self)
         self.decisions = [Decision('x' + str(i+1), 0, 1) for i in range(num_decisions)]
         self.num_obj = num_obj
         self.num_decisions = num_decisions
@@ -116,6 +121,7 @@ class DTSZ7(Problem):
 
 class DTSZ1(Problem):
     def __init__(self, num_decisions, num_obj):
+        Problem.__init__(self)
         self.decisions = [Decision('x' + str(i+1), 0, 1) for i in range(num_decisions)]
         self.num_obj = num_obj
         self.num_decisions = num_decisions

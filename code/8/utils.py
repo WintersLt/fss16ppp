@@ -83,7 +83,7 @@ def bdom(problem, one, other):
     dominates = False    
     for i in xrange(len(one)):
     	op = gt
-    	if problem.objective_type[i] == problem.DO_MINIMIZE: op = lt
+    	if problem.objective_type[i] == objectives.DO_MINIMIZE: op = lt
         if op(one[i], other[i]) :
             dominates = True
     	elif one[i] == other[i]:
