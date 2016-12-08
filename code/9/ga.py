@@ -6,7 +6,6 @@ import random
 import sys
 import objectives
 import utils
-import matplotlib.pyplot as plt
 import hve
 import hve2
 import time
@@ -95,6 +94,14 @@ def fast_non_dom_sort(problem, population, better=utils.bdom):
         if not p.n:
             p.rank = 1
             frontiers[0].append(p)
+    if len(frontiers[0]) == 0:
+       #print("Frontier 0 is empty")
+       sorted_pop = sorted(mypop, key = lambda X: X.n)
+       smallest_rank = sorted_pop[0].n
+       i=0
+       while sorted_pop[i].n == smallest_rank:
+           frontiers[0].append(sorted_pop[i])
+           i+=1
     i = 0
     num_added = len(frontiers[0])
     num_needed = len(population)
@@ -217,8 +224,6 @@ def find_hve2(problem, population):
 def ga(problem, pop_size = 100, gens = 35, select_type="nsga2bdom",
         crossover_type = "single_pt", mutation_rate = 0.01,dp_init_hve={},key="none", 
 		init_hve=None):
-    random.seed(1) # in order to generate same output with same params
-    problem.find_min_max()
     population = [problem.generate_one() for _ in range(pop_size)]
     initial_population = population[:]
     #hypervol = hve.hve(problem, population)
@@ -268,3 +273,21 @@ def plot_pareto(initial, final):
 #       mutation_rate = 0.1, crossover_type = "single_pt"))
 #####initial, final = ga(problem = problem)
 #####plot_pareto(initial, final)
+
+if __name__ == "__main__":
+    dtsz_obj_map = {'DTSZ5': objectives.DTSZ5, 'DTSZ7': objectives.DTSZ7, 'DTSZ1': objectives.DTSZ1, 'DTSZ3': objectives.DTSZ3}
+    argv = sys.argv
+    problem = dtsz_obj_map[argv[1]](int(argv[2]), int(argv[3]))
+    ga_args = argv[4:]
+    filename = argv[1] + "_" + argv[2] + "_" + argv[3] + ".verify"
+    file_handle = open(filename, "w")
+    print (argv[1] + "_" + argv[2] + "_" + argv[3], ":", "[ ", file=file_handle, end="")
+    for i in range(20):
+        random.seed(1131 + 2*i -1)
+    	problem.find_min_max()
+        x, hve = ga(problem, pop_size = int(ga_args[3]), gens = int(ga_args[4]), 
+				select_type = ga_args[2], mutation_rate = float(ga_args[0]), 
+				crossover_type = ga_args[1])
+        print (hve, ",",file=file_handle, end="")
+    print ("]", file=file_handle)
+

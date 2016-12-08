@@ -1,0 +1,15 @@
+DE: min max found
+DE: Gen 0
+DE: Gen 1
+DE: Gen 2
+DE: Gen 3
+[0.05, 'two_pt', 'gacdom', 40, 45] : 48.5231078549
+[0.05, 'two_pt', 'gacdom', 100, 35] : 49.6944184103
+[0.05, 'uniform', 'gacdom', 100, 35] : 47.7746933717
+[0.15, 'uniform', 'gacdom', 70, 45] : 49.0097248951
+[0.15, 'two_pt', 'gacdom', 100, 45] : 49.0097248951
+[0.01, 'single_pt', 'nsga2bdom', 40, 35] : 49.2521334073
+[0.15, 'uniform', 'nsga2cdom', 40, 25] : 49.5843011013
+[0.15, 'single_pt', 'nsga2cdom', 100, 25] : 49.5843011013
+[0.15, 'two_pt', 'nsga2bdom', 40, 25] : 51.2017925601
+[0.01, 'uniform', 'nsga2cdom', 100, 25] : 51.2017925601

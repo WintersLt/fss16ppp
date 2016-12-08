@@ -1,0 +1,22 @@
+DE: min max found
+DE: Gen 0
+DE: Gen 1
+DE: Gen 2
+DE: Gen 3
+DE: Gen 4
+DE: Gen 5
+DE: Gen 6
+DE: Gen 7
+DE: Gen 8
+DE: Gen 9
+DE: Gen 10
+[0.01, 'two_pt', 'nsga2cdom', 40, 45] : 20.9309550126
+[0.01, 'single_pt', 'nsga2cdom', 40, 25] : 20.4594116409
+[0.01, 'single_pt', 'gacdom', 100, 45] : 19.5282289648
+[0.01, 'two_pt', 'gacdom', 70, 35] : 19.5923829267
+[0.01, 'two_pt', 'nsga2bdom', 40, 25] : 20.6603296357
+[0.15, 'uniform', 'nsga2cdom', 40, 25] : 19.9950066165
+[0.05, 'single_pt', 'nsga2bdom', 40, 35] : 21.1196253871
+[0.01, 'single_pt', 'nsga2bdom', 100, 45] : 18.3977680811
+[0.15, 'single_pt', 'nsga2bdom', 100, 45] : 21.2028993059
+[0.15, 'single_pt', 'gacdom', 100, 35] : 20.8285710693
