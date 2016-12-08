@@ -8,26 +8,26 @@
 
 The Elitist Non-dominated Sorting Genetic Algorithm or NSGA-II algorithm is a faster variant of the classic Genetic algorithm technique. It has fast selection operator compared to its
 predecessors, which significantly improves the overall performance. We have implemented the non-dominated sorting using binary domination as well as continuous domination. Implementation
-with continuous domination was more challenging and it lead us to some of the corner cases of the algorithms. We ended up slightly modifying the algorithm to account for the corner cases.
+with continuous domination was more challenging and it lead us to some of the corner cases of the algorithm. We ended up slightly modifying the algorithm to account for the corner cases.
 As a general trend, we have seen binary domination variant perform slightly better on problems with lesser number of objectives.
 
 **Keywords**: Genetic algorithms, Non-dominated sort, continuoous domination, binary domination, crowd pruning
 
 ##1. Introduction:
 
-Genetic algorthm is a multi-objective evolutionary algorithm (MOEA) inspired from the process of natural selection. Traditinally, it is suited for binary data but it has been modified and 
+Genetic algorithm is a multi-objective evolutionary algorithm (MOEA) inspired from the process of natural selection. Traditinally, it is suited for binary data but it has been modified and 
 successfully adopted for other types of data as well. It consits of:
 
 - Initialization - Generating an initial population of candidate solutions. Each decision is represented as a gene in chromosome. 
-- Crossover - Selecting some decision values from both the parents
-- Mutation - Randomly modifying one or more of the decision values in child
-- Selection - Selecting a subset of current population based on the values of some fitness function
+- Crossover - Selecting some decision values from both the parents.
+- Mutation - Randomly modifying one or more of the decision values in child.
+- Selection - Selecting a subset of current population based on the values of some fitness function.
 - Termination - Stopping after some number of generations or when desired value of optimization is reached in population.
 
 The selection operation can be a major bottleneck since it is run over entire population multiple times. NSGA-2 proposes a selection based _domination rank_:
 
-- It sorts the population based on number points a given point is dominated by. 
-- Divides the population into ranks. Each rank comprises individuals dominated by same number of individuals. Each such ranks forms a _frontier_.
+- It sorts the population based on number of points a given point is dominated by. 
+- Divides the population into ranks. Each rank comprises individuals dominated by same number of individuals. Each such rank forms a _frontier_.
 - In order to select K best individuals, 
 	- keep selecting every individual in each frontier until we reach a frontier where, selecting all the individuals would lead us to exceed k.
 	- Perform secondary sort for crowd pruning in that frontier and select as many as needed from that frontier.
@@ -36,7 +36,7 @@ The secondary sorting technique used is called _cuboid sorting_.
 
 ### The fast non-dominated sort
 
-Following is an optimized implementation non-dominated sorting used in NSGA-2:
+Following is an optimized implementation of non-dominated sorting used in NSGA-2:
 
 ![NonDominatedSort](https://github.com/txt/ase16/blob/master/img/sort.png)
 
@@ -58,13 +58,13 @@ The cuboid sort algorithm for ssecondary sorting works as follows:
 + Sort candidates by _I<sub>p</sub>_
   + Discard the smaller ones. 
 
-The intution of this approach is to choose fewer individuals from more crowded spaces to get a better representation of solutions in from different parts of the search space and develop
+The intution of this approach is to choose fewer individuals from more crowded spaces to get a better representation of solutions from different parts of the search space and develop
 a richer and diverse solution set.
 
 ### Models
 
-We have used a a great variety of models from the DTLZ family.  DTLZ family of problems have been specifically written for the pupose of testing multi-objective optimizers. The shape of 
-pareto frontiers for these problems is known before hand and this fact helps researchers verify if their optimizer is working fine.
+We have used a a great variety of models from the DTLZ family.  DTLZ family of problems have been specifically written for the purpose of testing multi-objective optimizers. The shape of 
+pareto frontiers for these problems is known beforehand and this fact helps researchers verify if their optimizer is working fine.
 
 Specifically, we have used DTLZ1,3,5 and 7 with 10, 20 and 40 decisions and 2, 4, 6 and 8 objectives. This gives us a total of 4x3x4 = 48 different problems to work with.
 
@@ -87,19 +87,19 @@ The continuous domination function is also implemented based on the pseudo-code 
 
 ###2. Dealing with corner cases in NSGA-2 non-dominated sort
 
-Our implementation worked well with binary domination + cuboid sort based selection and we got expected results. However, in the cdom based selection, we were getting incoherent result 
-which were widely different from those seen in bdom case. On further investigation, we found that - sometimes, the numeber of individuals across all frotiers returned by 
-non\_dominated\_sort() function is less than the number of individuals in the population sent as input to the function.
+Our implementation worked well with binary domination + cuboid sort based selection and we got expected results. However, in the cdom based selection, we were getting incoherent results 
+which were widely different from those seen in bdom case. On further investigation, we found that - sometimes, the number of individuals across all frontiers returned by 
+fast\_non\_dominated\_sort() function is less than the number of individuals in the population sent as input to the function.
 
 In one extreme case, we got lesser number of individuals than the `retain_size` parameter value and our program terminated. 
 
 This was happening because, in the `fast_non_dominated_sort` pseudocode above, it is implicitly assumed that the ranks will be consecutive. In other words, the algorithm assumes that
-every consecutive numbered frontier will have atleast one individual. This was not the case in our counter example and hence the algorthm failed when it found an empty frontier before 
+every consecutive numbered frontier will have atleast one individual. This was not the case in our counter example and hence the algorithm failed when it found an empty frontier before 
 processing all the points in the population. This case crept up only in cdom variant and not in bdom. This is primarily because of the nature of cdom. 
 
 - If _a_ dominates _b_, and _b_ dominates _c_, it doesn't necesserily mean that _a_ dominates _c_. It is not transitive.
 - For each pair of candidate solutions _a_ and _b_, with real numbered values for objectives, it is extremely likely that _a_ dominates _b_ or _b_ dominates _a_ in case of cdom. However,
-  in bdom, it is quite possible that non of them dominate each other. This leads to less crowded, and possobly empty frontiers.
+  in bdom, it is quite possible that none of them dominate each other. This leads to less crowded, and possobly empty frontiers in case of cdom.
 
 We modified the algorithm as follows:
 
@@ -163,8 +163,8 @@ This modified version worked fine with the same inputs which failed earlier.
 
 We have used the ratio of hypervolume between the initial and the final population produced by the algorithm. We have used the improved hypervolume implementation proposed by Fonseca et. al.
 [here](http://lopez-ibanez.eu/doc/FonPaqLop06-hypervolume.pdf). This version of hypervolume estimation, altough slower, but gives much better results and allows us to discern and compare
-optimizers. The monte-carlo based hypervolume estimation technique, that we used earlier, always produced a hypervolume value of 1 irrespective of the optimization algorithms and hence
-provided no way to compare the results. We did not use IGD here as would have had to run this using diffrent optimizers to generate the _ideal_ pareto frontier as a step before, which could 
+optimizers. The monte-carlo based hypervolume estimation technique, that we used earlier, always produced a hypervolume value of 1 irrespective of the optimization algorithm and hence
+provided no way to compare the results. We did not use IGD here as we would have had to run this using diffrent optimizers to generate the _ideal_ pareto frontier as a step before, which could 
 have been more time consuming.
 
 ### Choosing default parameters
@@ -189,7 +189,7 @@ To further speed up experiments, we used the raw compute power provided by the [
 processors each. Hence, each processor was dedicated to one (of the 48) DTLZ variants. This made pur experiments run extremely fast.
 
 **Caching** : To further speed up the experiment, we cached the result of initial hypervolume calculations between the bdom and cdom variant of a problem. Hence the time required to compute
-hypervolume of the inital pupulation was halved.
+hypervolume of the inital pupulation was halved on average.
 
 ## Results
 
@@ -206,7 +206,7 @@ However, in cdom, given two points, one of them is highly likely to dominate the
 
 - We successfully handled the corner cases that were highlighted when using NSGA-2 with cdom. In general, it is hard to identify and deal with such corner case.
 - Hyperovolume estimator used by us is prohibitively slow in some case and can seriously hit the speed of the experiment.
-- The behaviour of binary and continuous domination is highlighted by varyiing the nummber of objectives. Hence it is advisable to test any optimizers on different variety of problems.
+- The behaviour of binary and continuous domination is highlighted by varying the nummber of objectives. Hence it is advisable to test any optimizer on wide variety of problems.
 - Lastly, look for any scope for caching (or dynamic programming) to speed-up otherwise slow and tedious experiments.
 
 ## Threats to validity
@@ -221,7 +221,7 @@ Our experiments and hence the associated conclusions are based on certain assump
 ## Future work
 
 - A more thorough analysis of mathematical correctness of our variation of NSGA-2 needs to be done.
-- Some mathematical proof of non-transitive nature of cdom is also worth  doing. The only proof now we have involve a counter example.
+- Some mathematical proof of non-transitive nature of cdom is also worth doing. The only proof now we have involves a counter example.
 - As a more obvious work, we would like to remove some of the issues mentioned in the threats to validity section.
 
 ## References
