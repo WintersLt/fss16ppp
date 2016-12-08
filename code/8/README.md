@@ -91,7 +91,7 @@ Our implementation worked well with binary domination + cuboid sort based select
 which were widely different from those seen in bdom case. On further investigation, we found that - sometimes, the numeber of individuals across all frotiers returned by 
 non\_dominated\_sort() function is less than the number of individuals in the population sent as input to the function.
 
-In one extreme case, we got lesser number of individuals than the `retain\_size` parameter value and our program terminated. 
+In one extreme case, we got lesser number of individuals than the `retain_size` parameter value and our program terminated. 
 
 This was happening because, in the `fast_non_dominated_sort` pseudocode above, it is implicitly assumed that the ranks will be consecutive. In other words, the algorithm assumes that
 every consecutive numbered frontier will have atleast one individual. This was not the case in our counter example and hence the algorthm failed when it found an empty frontier before 
