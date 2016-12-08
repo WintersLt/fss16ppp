@@ -46,13 +46,12 @@ def collect_type1_stats():
         #print name, ":", (mid1 + mid2)/2
         print name, ":", stats.xtile(losses[name])
 
-
 def collect_type2_stats():
     print "##### a12 ######"
     for i in range(len(opt_names)):
         for j in range(len(opt_names)):
             if i>=j: continue
-            print "a12 test for", opt_names[i], "and", opt_names[j], stats.a12(losses["sa"], losses["mws"])
+            print "a12 test for", opt_names[i], "and", opt_names[j], stats.a12(losses[opt_names[i]], losses[opt_names[j]])
 
 
 def collect_type3_stats():
@@ -60,9 +59,16 @@ def collect_type3_stats():
     for i in range(len(opt_names)):
         for j in range(len(opt_names)):
             if i>=j: continue
-            print "bootstrap test for", opt_names[i], "and", opt_names[j], stats.bootstrap(losses["sa"], losses["mws"])
+            print "bootstrap test for", opt_names[i], "and", opt_names[j], stats.bootstrap(losses[opt_names[i]], losses[opt_names[j]])
 
+def my_scottknott():
+    print "##### scott-knott ######"
+    data = []
+    for name in opt_names:
+        data.append([name] + losses[name])
+    stats.rdivDemo(data)
 
 collect_type1_stats();
 collect_type2_stats();
 collect_type3_stats();
+my_scottknott();

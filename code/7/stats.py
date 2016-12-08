@@ -17,7 +17,7 @@ class o():
             if not "_" in k]
 
 The=o(cohen=0.3, small=3, epsilon=0.01,
-      width=50,lo=0,hi=100,conf=0.01,b=1000,a12=0.56)
+      width=50,lo=0,hi=100,conf=0.01,b=1000,a12=0.56,text=30)
 
 """
 TODO
