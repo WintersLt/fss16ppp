@@ -112,7 +112,7 @@ comparison, effect size test using a12 algirithm and the bootstrap test for hypo
 
 ## Results
 
-![Results](images/results7.jpeg)
+![Results](images/result7.jpeg)
 
 The results from the experiments are summarized above. Note that, the greater the loss (in absolute value) between from first to last generation, the better the optimizer.
 - At the top are the median value of cdom lossed represented visually along with the quintiles. It can be observed the DE has the highest loss and hence the best performance.
