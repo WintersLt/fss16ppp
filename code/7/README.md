@@ -16,15 +16,6 @@ domination as performance measure and different statistical tests to ascertain t
 
 ##1. Introduction:
 
-- some common about aall three algo and then details
-- details three comparison operators
-- Implementation details
-- Problem with pareto frontiers
-- Results: Image. And explaination 2-3 lines
-- Conclusion-Which one is better. Some reasoning for being better. Some comment on how powerful it is.
-- Threats to validity - 
-- Future work
-
 The search based optimization algirithms, including the ones used in this work, usually progress by randomly exploring the search space. They use some variant of _fitness function_ to 
 quickly evaluate the point in a search space and then move on to the next point. However, all these algorithms do differ in certain important aspects of how they explore the search space.
 Following is a brief summary of the three algorithms we have used in this work:
