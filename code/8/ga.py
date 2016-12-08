@@ -9,6 +9,7 @@ import utils
 import matplotlib.pyplot as plt
 import hve
 import hve2
+import time
 
 # Few Utility functions
 def say(*lst):
@@ -157,16 +158,23 @@ def select(problem, population, retain_size, better=utils.bdom):
     return new_pop
 
 def find_hve2(problem, population):
+    start = time.time()
     solutions = [problem.get_objectives(X) for X in population]
     referencePoint = [1.5 * y for y in problem.obj_maxs]
     hv = hve2.InnerHyperVolume(referencePoint)
-    return hv.compute(solutions)
+    ret = hv.compute(solutions)
+    #print ("find_hve2: ", time.time() - start)
+    return ret
 
-def ga(problem, pop_size = 100, gens = 35, better=utils.bdom):
+def ga(problem, pop_size = 100, gens = 35, better=utils.bdom,dp_init_hve={},key="none"):
     population = [problem.generate_one() for _ in range(pop_size)]
     initial_population = population[:]
     #hypervol = hve.hve(problem, population)
-    init_hypervol = find_hve2(problem, population)
+    init_hypervol = None
+    if not key in dp_init_hve:
+        init_hypervol = find_hve2(problem, population)
+        dp_init_hve[key] = init_hypervol
+    init_hypervol = dp_init_hve[key]
     gen = 0 
     while gen < gens:
         #say(".")
@@ -204,10 +212,9 @@ def plot_pareto(initial, final):
     plt.legend(loc=9, bbox_to_anchor=(0.5, -0.175), ncol=2)
     plt.show()
 
-#   random.seed(1)
-#   problem = objectives.DTSZ7(10,2)
-#   problem.find_min_max()
-#   initial, final = ga(problem = problem, better = utils.cdom)
-#   #initial, final = ga(problem = problem)
-#   print(final)
-#   #plot_pareto(initial, final)
+####random.seed(1131)
+####problem = objectives.DTSZ7(10,8)
+####problem.find_min_max()
+####print(ga(problem = problem, better = utils.cdom))
+#####initial, final = ga(problem = problem)
+#####plot_pareto(initial, final)
