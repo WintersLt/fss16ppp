@@ -10,7 +10,7 @@ There are a number of meta-heuristic search based optimization algorithms. Since
 solution. Sometimes these algorithms end up running longer durations and end up consuming resources without producing significantly improved solutions. Since all we ask for is approximate
 solutions from these algorithms, it might not be worth it to keep running these algorithms for longer durations. In this work, we explore a few criteria for early termination of 
 Simulated annealing(SA), MaxWalkSat(MWS) and Differential Evolution(DE) algorithms. We also present a comparison of performance of these algorithms with early termination using continuous
-domination as performance measure and different statistical tests to ascertain the observed differences in performance.Expectedly, we find DE performs better then SA and MWS.
+domination as performance measure and different statistical tests to ascertain the observed differences in performance.Expectedly, we find DE performs better than SA and MWS.
 
 **Keywords**: Differential Evolution, Simulated Annealing, MaxWalkSat, DTLZ7, Statistical tests
 
@@ -26,17 +26,17 @@ Following is a brief summary of the three algorithms we have used in this work:
 - The explorations starts off at a random point in the search space. It maintains a cache of three solutions at any time - the best seen so far, the current solution and the last solution.
 - If we come across a better solution, we move to that point. 
 - If we come across a worse solution, we move to that point with a probability P.
-- The probability P depends on a _temperature_ values. Initially, temperature is high and we are more likely to jump to worse solutions. As search progresses, the temperature decreases and 
+- The probability P depends on a _temperature_ value. Initially, temperature is high and we are more likely to jump to worse solutions. As search progresses, the temperature decreases and 
   we start avoing to jump to worse solutions.
 
 ###2. MaxWalkSat(MWS)
 
-   This algorthm takes into account the local landscape of search space. The idea is slight modification on the mutation operation wihle searching. Instead of randomly moving to the next
+   This algorthm takes into account the local landscape of search space. The idea is a slight modification on the mutation operation while searching. Instead of randomly moving to the next
 point in the search space, we perform a local search for a better solution with a probability P. 
 - The local search involves choosing one dimension and exploring just that one dimension for a better solution.
 - Another concept introduced in this algorithm is that of retries. If we cannot find a good enough solution in our search space locally, we start all over again from a different point
   in the search space and start searching locally there.
-- This is also a single objective optimization algorithms.
+- This is also a single objective optimization algorithm.
 
 ###3. Differential Evolution(DE):
 
@@ -44,13 +44,13 @@ point in the search space, we perform a local search for a better solution with 
 multi-objective optimization with possible multiple competing objectives. It generates a pareto frontier of solutions as output instead of a single solution. It optimizes without considering
 the gradient of the objective function and hence finds wide applications.
 - DE optimizes a problem by maintaining a population of candidate solutions and creating new candidate solutions by combining existing ones according to its simple formulae
-- It retains the candidate which have the best score or fitness.
+- It retains the candidate which has the best score or fitness.
 - Gradient is, thus, not a guiding factor in search space exploration.
 
 ### The optimization problem - DTLZ:
 
 In this work, we try to find a set of optimal solutions for DTZ7 problem with 10 decisions and 2 objectives. DTLZ family of problems have been specifically written for the pupose of testing
-multi-objective optimizers. The shape of pareto frontiers for these problems if known before hand and this fact helps researchers verify if their optimizer is working fine.
+multi-objective optimizers. The shape of pareto frontiers for these problems if known before hand and this fact helps researchers verify is their optimizer is working fine.
 
 The pareto frontier for DTLZ7 consists of 2^(m-1) disconnected regions, where m is the number of objectives. So in our case of two objectives, a good optimizer will produde these two 
 regions. We have based our implemtation of DTLZ7 on the one present in [Jmetal library](https://github.com/jMetal/jMetal/blob/master/jmetal-problem/src/main/java/org/uma/jmetal/problem/multiobjective/dtlz/DTLZ7.java).
@@ -61,7 +61,7 @@ regions. We have based our implemtation of DTLZ7 on the one present in [Jmetal l
 
 Following are the major design challenges faced in the implementation:
 - What termination criteria to use for each of the algorithms?
-- How to generate a pareto front from Simulted annealing and MazWalkSat, so that we can have apple vs apple comparison between DE and these algorithms?
+- How to generate a pareto front from Simulted annealing and MaxWalkSat, so that we can have apple vs apple comparison between DE and these algorithms?
 - Comparing the results from three algorithms
 
 The implementation of the three algorithms is based on the standard version as provided on the course website.
@@ -81,11 +81,11 @@ The technique works as follows:
 3. If no improvemnt, then decrement the number of lives by one else reset number of lives to k.
 4. Terminate when no lives left.
 
-Another important aspect of implemting early termination is determinint improvement:
+Another important aspect of implemting early termination is determining improvement:
 
 1. **SA** : As long as the _best so far_ is improving as compared to previous era, we call it improvement and keep giving more lives to algorithm
 2. **MWS** : Here, every _retry_ makes one era. If we improve on the best known, as compared to last retry, we call it as improvement and give lives to algorithm.
-3. **DE** : For DE, we have used the Type 2 comparator that performs the a12 test on the current pareto frontier. If the difference between pareto frontier from last era and current era is 
+3. **DE** : For DE, we have used the Type 2 comparator that performs the a12 test on the current pareto frontier. If the difference between pareto frontier from last era and current era 
    is not a small effect, we call it improvement and give more lives to algorthm.
 
 ###2. Generating Pareto frontier from SA and MWS
@@ -98,22 +98,22 @@ optimal solutions for the problem.
 
 ###3. Comparing results from the three algortihms
 
-We use continuous domination loss between the first and last generation as parformance measure for comparison. Further we use the Type 1, 2 and 3 comarators imvolving median score
+We use continuous domination loss between the first and last generation as performance measure for comparison. Further we use the Type 1, 2 and 3 comarators involving median score
 comparison, effect size test using a12 algirithm and the bootstrap test for hypothesis testing. To generate a ranking of optimizers, we have used Scott-Knott test.
 
 ## Results
 
 ![Results](images/result7.jpeg)
 
-The results from the experiments are summarized above. Note that, the greater the loss (in absolute value) between from first to last generation, the better the optimizer.
-- At the top are the median value of cdom lossed represented visually along with the quintiles. It can be observed the DE has the highest loss and hence the best performance.
+The results from the experiments are summarized above. Note that, the greater the loss (in absolute value) from first to last generation, the better the optimizer.
+- At the top are the median value of cdom losses represented visually along with the quintiles. It can be observed that DE has the highest absolute loss and hence the best performance.
 - The second result in the image is a12 effect size test. We can see that the results are false for each of the pair indicating the difference in performance is a small effect.
-- Further we perform bootstrap test, which is also `false`. on some repetitions of the bootstrap test we got `true`. This, however, is insignificant be cause the differences are a small 
+- Further we perform bootstrap test, which is also `false`. On some repetitions of the bootstrap test we got `true`. This, however, is insignificant because the differences are a small 
   effect.
-- Finally we have the results of the Scott-Knott test. SA and MWS are ranked similarly, while DE ranks higher. 
+- Finally we have the results of the Scott-Knott test. SA and MWS are ranked similarly, while DE ranks higher. Higher rank on absolute loss indicates better performance.
 
 The results from the experiments are as per expectation. SA and MWS are not very well suited for multi-objective optimizations. When optimizing a multi-objective problem with SA or MWS
-essentially we optimize the weighted sum of objectives. Add to that the effect of early termination, we end up with sub-optimal solutions as comparedto DE.
+essentially we optimize the weighted sum of objectives. Add to that the effect of early termination, we end up with sub-optimal solutions as compared to DE.
 
 ## Conclusion
 
@@ -140,7 +140,7 @@ Our experiments and hence the associated conclusions are based on certain assump
 
   [Multiobjective Simulated Annealing: A Comparative Study to Evolutionary Algorithms](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.74.2194&rep=rep1&type=pdf) - Dongkyung Nam and Cheol Hoon Park
 
-  The paper discusses several approaches for dealing with multi-objective optimation in SA. We would like to implement a few  of these and look for the possibility of improvent in out
+  The paper discusses several approaches for dealing with multi-objective optimization in SA. We would like to implement a few  of these and look for the possibility of improvent in our
   results.
 
 - Their have been studies on different approaches for early termination. Some of them are quite similar to our approach. But still, they need to be studied to see if we did any better than
