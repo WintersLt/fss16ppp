@@ -2,7 +2,6 @@ from __future__ import division
 import random
 import sys
 import copy
-import stats
 
 objective_types = ['DTSZ1', 'DTSZ3', 'DTSZ5', 'DTSZ7']
 num_decisions = [10, 20, 40]
@@ -15,7 +14,6 @@ def extract():
                 filename = objective + "_" + str(num_decision) + "_" + str(num_objective) + ".log"
                 max_hve = 0.0
                 max_param = ""
-                print "searching file", filename
                 with open(filename, "r") as f:
                     for line in f:
                         if line[0] != '[': continue
